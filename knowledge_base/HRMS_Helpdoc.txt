@@ -1,0 +1,235 @@
+FABRIQ HRMS — HELP DOCUMENTATION
+================================
+A guide to using the fabrIQ HRMS: roles, modules, and how to do the common
+things you will need day to day. Throughout this guide "you" means the person
+logged in, and "your subordinates" means the people who report to you.
+
+
+ROLES & ACCESS (Role Based Access Control)
+------------------------------------------
+HRMS has Role Based Access Control which gives different views to different
+roles/templates. Each template has different capabilities. (Role here doesn't
+mean your company assigned role, but HRMS specific roles like manager that
+grant approvals such as reimbursements requested by your subordinates.) These
+are configurable by System Admin and HR.
+
+Templates:
+- Employees (default): self service capabilities like apply leave, profile edit.
+- Manager: sub-organisation view, direct reporters' approvals, and other
+  capabilities.
+- Leadership: special configuration permissions, entire organisation wide access.
+- Team Lead: views and actions scoped to the team.
+- HR: configuration settings, policy updates, documents request and view.
+
+Across every module (from Employees onwards) you will see the same structure:
+- My Space: actions and views specific to you, which don't involve your
+  subordinates' actions.
+- Subordinates: reviewing or approving your subordinates' requests (for example
+  approving their leave, correcting their attendance). Visible to Manager,
+  Team Lead, and above.
+- Configure: module specific settings, accessible by Leadership, HR, and
+  System Admin.
+
+
+LIST OF MODULES
+---------------
+1) Login
+2) Home
+3) Employees
+4) Attendance
+5) Leaves & OD
+6) Reimbursements
+7) Documents
+8) Settings
+9) My Profile
+
+
+1) LOGIN
+--------
+You can log in with your email id and password, or quickly log in by selecting
+"Sign in with Microsoft".
+
+If you forgot your password:
+- Type your email.
+- Click "Forgot password".
+- You will then get a mail to your registered email with further instructions.
+
+
+2) HOME MODULE
+--------------
+Home is the first thing you would see after you log in. You can select your
+location and mark your attendance for the day quickly. Marking attendance
+records one half of the day; the other half needs an approved half-day leave,
+otherwise it is counted as absent.
+
+There are two parts to Home: Actions and Widgets.
+- Actions: These are the actions predicted to be most visited across the other
+  modules, placed directly on Home so you can quickly do that action (apply
+  leave, etc.) without going to the other module. The current timestamp and
+  location will be logged.
+- Widgets: These primarily show live information and HRMS tasks, with some
+  actions that can be performed in a few clicks right from the Home screen. You
+  can add or remove widgets by selecting the "Edit home screen" option.
+
+
+3) EMPLOYEES MODULE
+-------------------
+My Space:
+- Employee Directory: Access emails and positions of all employees in fabrIQ,
+  filter by department and location. You can email them directly and also view
+  them in the org chart.
+- Org Chart: The organisation chart gives a bird's-eye view of fabrIQ.
+
+Configure (Leadership, HR, System Admin):
+- Add Employee: Employees can be added by filling in the mandatory full name,
+  email, and phone number. You can select a template and reporting manager and
+  other optional fields, or leave them for the employee to add later. Employees
+  can edit their details in My Profile.
+- Org Builder: The organisation structure can be organised here. Remove a
+  relation by clicking the line connecting two people, or add a connection by
+  clicking a node and dragging to the reporter's node. Employees can be quickly
+  added by clicking the plus icon. Changes are saved on clicking Save. Click
+  "Auto arrange" to tidy the org chart.
+- Activation Request: System Admin and other templates have the option to
+  disable an employee, which is reversible. The employee gets a notification and
+  won't be able to access their HRMS. They can request activation, which will be
+  shown here in Activation Requests.
+
+
+4) ATTENDANCE MODULE
+--------------------
+You can mark your attendance on the Home screen, which will be reflected here.
+You can correct your attendance, in case you forgot to mark it, within 2 days.
+The smallest unit is a half day. You can select an optional holiday in either
+the Attendance module or the Holiday section — both make the same change. Click
+a date marked present or half day to see hours spent and other details.
+
+Colour key:
+- Green: present
+- Red: absent (this will be converted to LOP unless addressed)
+- Blue: holiday
+- Golden star: floating / optional holiday
+
+Regularise: review days marked absent and either:
+- Request for leave.
+- Request for correction (if it's older than 2 days, your manager's approval is
+  needed; it auto-approves after 7 days).
+If left unattended, the day will be considered LOP (Loss Of Pay) after 35 days
+from that day.
+
+Subordinates:
+- Attendance Board: review your subordinates' attendance, and mark and view it
+  in a calendar view.
+- Correction Request: review requests made by your subordinates and either
+  approve or reject with a reason that will be shown to them.
+
+Configure: Visible to HR and System Admin, to edit holidays, set weekdays, etc.
+
+
+5) LEAVES & OD MODULE
+---------------------
+How to apply for leave:
+You can apply for a full or half day leave in two ways.
+
+Way 1 — List view (step by step):
+1. Go to the Leaves & OD module.
+2. Select the start date and the end date.
+3. Select the leave type (currently all are casual leaves; once the fabrIQ leave
+   policy is finalised, leave types can be configured in Settings).
+4. Select the duration (full day or half day) and add an optional reason.
+5. Review the Leave Summary — it shows your available leaves and the leaves
+   remaining after deducting the ones you just selected, so you can check before
+   applying. (This summary is specific to the leave type selected; the Leave
+   Report shows the balance and summary for all leave types.)
+6. Click Apply.
+
+Way 2 — Calendar view (quick apply):
+1. Open the Calendar view.
+2. Click the start date and drag to the end date.
+3. Select the duration and leave type.
+4. Click Apply.
+
+You can also review holidays and plan your leave in the same place without
+switching tabs.
+
+My Space:
+- Apply On Duty (OD): On Duty needs to be applied when you work at a client site
+  or a location other than your designated office. A request is sent to your
+  manager and, upon approval, your attendance is corrected.
+- Leave Review: review your applied leaves (also possible under "Requests in
+  progress" in Apply Leave). Withdraw them before your manager approves, or
+  cancel them after approval, or access your leave history. Cancelling an
+  approved leave needs your manager's confirmation.
+
+Subordinates:
+- Leave Review: approve or reject your subordinates' leaves, with a reason.
+- Leave Tracking: review the leave calendar to see who will be on leave on
+  certain days. Review individual leaves month by month.
+
+
+6) REIMBURSEMENTS MODULE
+------------------------
+Apply for and review reimbursement claims. There are three types of
+reimbursements:
+- Receipt based: needs a mandatory file upload.
+- Without Receipt: no file upload needed.
+- Travel based: reimbursement is calculated from the per-km cost set up in
+  Settings and the km you enter. Multiple dates can be selected.
+
+Your submissions can be reviewed in the "My Submissions" tab.
+
+Managers can review and approve their subordinates' claims in the "Pending
+Review" tab under Subordinates, and see all reimbursement claims made in "All
+History".
+
+
+7) DOCUMENTS MODULE
+-------------------
+Upload documents, or request documents from a specific employee or from
+everyone. Certain pre-defined document types are provided (based on common
+references) so requests stay consistent. Documents and requests can be reviewed
+in the "My Documents" section.
+
+My Space:
+- My Documents: view documents you have uploaded and documents shared with you,
+  and see the status of any documents that have been requested from you (pending
+  or submitted).
+- Upload / Submit: upload a document against a request, or store a personal
+  document such as an ID proof or certificate.
+
+Subordinates / HR:
+- Request Documents: request one or more document types from a specific
+  employee or from everyone at once, so you can collect what is needed in one
+  place.
+- Review: review submitted documents and mark them as accepted, or ask for a
+  re-upload with a reason.
+
+
+8) SETTINGS MODULE
+------------------
+Accessible only to HR, System Admin, and Leadership roles. Various
+configurations can be done here, such as updating the leave policy, adding
+default leaves, setting the per-km cost used for travel reimbursements, and
+similar organisation-wide settings.
+
+
+9) MY PROFILE
+-------------
+My Profile is your personal record in the HRMS, and it is where the details
+other modules rely on come from — so keeping it up to date matters. It is
+available to every employee for their own profile.
+
+Here you can:
+- View and edit your personal details: full name, contact number, email, and
+  other optional fields. Fields left blank when your account was created (for
+  example by HR while adding you) can be completed here.
+- See your work details: your template/role, reporting manager, department, and
+  location, so you know how you sit in the organisation. Role and reporting
+  manager are managed by HR / System Admin via the Employees module rather than
+  edited directly here.
+- Reach the information the other modules use: your attendance, leave balance,
+  reimbursements, and documents all tie back to the identity shown on your
+  profile.
+
+Keeping your profile accurate means approvals, notifications, and reports reach
+the right place, so review it whenever your contact details change.

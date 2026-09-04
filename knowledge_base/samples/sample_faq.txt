@@ -1,0 +1,72 @@
+ACME STORE — CUSTOMER SUPPORT KNOWLEDGE BASE
+============================================
+
+RETURNS & REFUNDS
+-----------------
+Q: What is your return policy?
+A: We accept returns within 30 days of purchase. Items must be unused and in original packaging. To start a return, email support@acmestore.com with your order number.
+
+Q: How long does a refund take?
+A: Refunds are processed within 5-7 business days after we receive the returned item. The amount will be credited to your original payment method.
+
+Q: Can I return a sale item?
+A: Sale items marked as FINAL SALE cannot be returned. All other sale items follow the standard 30-day return policy.
+
+Q: What if my item arrived damaged?
+A: If your item arrived damaged, contact us within 48 hours of delivery with photos of the damage. We will send a replacement at no cost to you.
+
+SHIPPING
+--------
+Q: How long does shipping take?
+A: Standard shipping takes 3-5 business days. Express shipping (2 business days) is available at checkout for an additional fee.
+
+Q: Do you ship internationally?
+A: Yes, we ship to over 50 countries. International shipping typically takes 7-14 business days. Customs fees are the responsibility of the customer.
+
+Q: How do I track my order?
+A: Once your order ships, you will receive a tracking email. You can also log into your account and view "Order History" to see live tracking.
+
+Q: Is free shipping available?
+A: Yes! Orders over $50 qualify for free standard shipping within the US.
+
+ACCOUNT & ORDERS
+----------------
+Q: How do I cancel my order?
+A: Orders can be cancelled within 1 hour of placing them. Go to My Account → Orders → Cancel Order. After 1 hour, the order is sent to our warehouse and cannot be cancelled.
+
+Q: I forgot my password, how do I reset it?
+A: Click "Forgot Password" on the login page and enter your email. You will receive a reset link within 5 minutes. Check your spam folder if you don't see it.
+
+Q: Can I change my shipping address after ordering?
+A: Address changes can be made within 1 hour of ordering by contacting support@acmestore.com. After that, the order cannot be modified.
+
+Q: How do I apply a discount code?
+A: Enter your discount code in the "Promo Code" field at checkout before completing payment. Only one code can be used per order.
+
+PRODUCTS
+--------
+Q: Are your products under warranty?
+A: All products come with a 1-year manufacturer warranty against defects. This does not cover accidental damage or misuse.
+
+Q: How do I know if an item is in stock?
+A: If the "Add to Cart" button is visible, the item is in stock. Items that show "Notify Me" are currently out of stock.
+
+Q: Do you restock sold-out items?
+A: Most items are restocked within 2-4 weeks. Click "Notify Me" on the product page to receive an email when it's back in stock.
+
+PAYMENTS
+--------
+Q: What payment methods do you accept?
+A: We accept Visa, Mastercard, American Express, PayPal, and Apple Pay.
+
+Q: Is my payment information secure?
+A: Yes. We use 256-bit SSL encryption and never store your full card details. All payments are processed by Stripe, a PCI-compliant payment processor.
+
+Q: Why was my payment declined?
+A: Payments may be declined due to incorrect card details, insufficient funds, or your bank flagging the transaction. Try again or contact your bank. If the issue persists, email support@acmestore.com.
+
+CONTACT
+-------
+Email: support@acmestore.com
+Phone: 1-800-ACME-123 (Mon-Fri, 9am-6pm EST)
+Live Chat: Available on our website Mon-Fri, 9am-8pm EST
