@@ -12,13 +12,12 @@ What this does:
       → stored in ChromaDB (persisted to ./chroma_db folder)
 """
 import os
-import time
 import tempfile
 from pathlib import Path
 
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
 # ── Config ────────────────────────────────────────────────────────────
@@ -26,45 +25,27 @@ CHROMA_DIR    = "./chroma_db"   # Where ChromaDB saves its data
 CHUNK_SIZE    = 1000            # Max characters per chunk
 CHUNK_OVERLAP = 200             # Overlap so context isn't cut off between chunks
 
+# Embedding model runs LOCALLY via sentence-transformers (HuggingFace) — no API
+# key, no network, no rate limits. This is why uploads no longer fail: chunking
+# a file embeds everything on your machine instead of hammering a throttled API.
+# The same model MUST be used for ingesting and querying (see rag_chain.py).
+# Override with the EMBED_MODEL env var if you want a different one.
+EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
-class ResilientEmbeddings(GoogleGenerativeAIEmbeddings):
-    """
-    Gemini embeddings with retry/backoff for free-tier rate limits.
-
-    The Gemini embedding endpoint allows only ~5 requests/minute on the free
-    tier and returns a 500/429 when that burst limit is hit. A short
-    exponential backoff lets the per-minute window clear so the call succeeds
-    instead of crashing the whole chain. Used by both ingestion and querying.
-    """
-    def _with_retry(self, fn, *args, **kwargs):
-        delay = 2.0
-        for attempt in range(5):
-            try:
-                return fn(*args, **kwargs)
-            except Exception as e:
-                msg = str(e)
-                transient = any(s in msg for s in
-                                ("429", "500", "RESOURCE_EXHAUSTED", "Internal error"))
-                if transient and attempt < 4:
-                    time.sleep(delay)
-                    delay *= 2
-                    continue
-                raise
-        return None
-
-    def embed_query(self, text, *args, **kwargs):
-        return self._with_retry(super().embed_query, text, *args, **kwargs)
-
-    def embed_documents(self, texts, *args, **kwargs):
-        return self._with_retry(super().embed_documents, texts, *args, **kwargs)
+# Cache the loaded model so we don't reload it on every call.
+_embeddings = None
 
 
-def _get_embeddings():
-    """Returns Gemini embedding model (converts text → vectors)."""
-    return ResilientEmbeddings(
-        model=os.getenv("GEMINI_EMBED_MODEL", "models/gemini-embedding-001"),
-        google_api_key=os.getenv("GOOGLE_API_KEY")
-    )
+def get_embeddings():
+    """Returns a local HuggingFace embedding model (text → vectors)."""
+    global _embeddings
+    if _embeddings is None:
+        _embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
+    return _embeddings
+
+
+# Backwards-compatible alias (older code called this name).
+_get_embeddings = get_embeddings
 
 
 def _get_vectorstore():
@@ -212,8 +193,5 @@ if __name__ == "__main__":
     print("  RAG Chatbot — Document Ingestion")
     print("=" * 50)
 
-    if not os.getenv("GOOGLE_API_KEY"):
-        print("❌ GOOGLE_API_KEY not found. Create a .env file first.")
-        exit(1)
-
+    # Embeddings run locally (HuggingFace) — no API key needed for ingestion.
     ingest_from_folder("./knowledge_base")

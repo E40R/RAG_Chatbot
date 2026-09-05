@@ -1,19 +1,4 @@
-"""
-app.py — Streamlit Frontend for the RAG Customer Support Chatbot
-================================================================
-Run with:
-    streamlit run app.py
 
-What this file handles:
-  - Page layout and configuration
-  - Session state (chat history, session ID, RAG chain)
-  - Sidebar: file upload, folder loading, settings
-  - Chat UI: message display, input, response rendering
-  - Source document display
-
-The actual RAG logic lives in rag_chain.py
-The document ingestion logic lives in ingest.py
-"""
 import uuid
 import os
 import streamlit as st
@@ -23,17 +8,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ── API Key check — fail early with a helpful message ─────────────────
-if not os.getenv("GOOGLE_API_KEY"):
+if not os.getenv("HUGGINGFACEHUB_API_TOKEN"):
     st.error(
-        "❌ **GOOGLE_API_KEY not found.**\n\n"
+        "❌ **HUGGINGFACEHUB_API_TOKEN not found.**\n\n"
         "1. Copy `.env.example` to `.env`\n"
-        "2. Add your Gemini API key from https://aistudio.google.com/app/apikey\n"
+        "2. Add your HuggingFace token from https://huggingface.co/settings/tokens\n"
         "3. Restart the app"
     )
-    st.stop()  # Don't render the rest of the app
+    st.stop()
 
 # Import after the key check so we don't crash on missing key
-from rag_chain import create_rag_chain, get_response
+from rag_chain import create_rag_chain, get_response, AVAILABLE_MODELS
 from ingest import ingest_documents, ingest_from_folder
 
 # ── Page configuration ────────────────────────────────────────────────
@@ -59,10 +44,14 @@ if "messages" not in st.session_state:
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 
-# The RAG chain — built once, reused across all messages
+# Selected question-answering model (changeable from the sidebar)
+if "model" not in st.session_state:
+    st.session_state.model = AVAILABLE_MODELS[0]
+
+# The RAG chain — built once per selected model, reused across all messages
 if "chain" not in st.session_state:
     with st.spinner("🔧 Initializing RAG pipeline... (first load takes a moment)"):
-        st.session_state.chain = create_rag_chain()
+        st.session_state.chain = create_rag_chain(st.session_state.model)
 
 # ── Sidebar ───────────────────────────────────────────────────────────
 with st.sidebar:
@@ -102,6 +91,20 @@ with st.sidebar:
 
     # ── Settings ──────────────────────────────────────────────────────
     st.subheader("⚙️ Settings")
+
+    # Model selector — switching rebuilds the RAG chain with the new model
+    selected_model = st.selectbox(
+        "Answering model (HuggingFace)",
+        AVAILABLE_MODELS,
+        index=AVAILABLE_MODELS.index(st.session_state.model),
+        help="Pick which free HuggingFace model answers your questions."
+    )
+    if selected_model != st.session_state.model:
+        st.session_state.model = selected_model
+        with st.spinner(f"Switching to {selected_model}..."):
+            st.session_state.chain = create_rag_chain(selected_model)
+        st.rerun()
+
     show_sources = st.toggle(
         "Show source documents",
         value=True,

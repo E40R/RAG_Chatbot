@@ -30,9 +30,19 @@ To switch to OpenAI instead of Gemini:
   Replace GOOGLE_API_KEY → OPENAI_API_KEY
 """
 import os
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain_chroma import Chroma
-from ingest import ResilientEmbeddings
+from ingest import get_embeddings
+
+# ── Available question-answering models (HuggingFace Inference API) ────
+# These are free serverless models confirmed to work. The UI selector and the
+# HF_MODEL env var both pick from here. First entry is the default.
+AVAILABLE_MODELS = [
+    "meta-llama/Llama-3.1-8B-Instruct",     # fast, good default
+    "meta-llama/Llama-3.3-70B-Instruct",    # most capable
+    "Qwen/Qwen2.5-72B-Instruct",            # strong alternative
+]
+DEFAULT_MODEL = os.getenv("HF_MODEL", AVAILABLE_MODELS[0])
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -57,40 +67,37 @@ def _get_session_history(session_id: str) -> ChatMessageHistory:
     return _session_store[session_id]
 
 
-def create_rag_chain():
+def create_rag_chain(model_name: str = None):
     """
     Build and return the full conversational RAG chain.
-    Call this ONCE at startup and reuse the returned chain.
-    """
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        raise ValueError("GOOGLE_API_KEY not set. Check your .env file.")
+    Call this ONCE at startup (or when the model is changed) and reuse it.
 
-    # ── 1. LLM — Gemini 1.5 Flash ────────────────────────────────────
-    # temperature=0 → fully deterministic, factual answers (good for support)
-    # temperature=1 → more creative/varied (good for creative tasks)
-    # We use 0.2 — mostly factual with slight natural variation
-    # NOTE on model choice: the free tier caps each model at ~20 requests/day,
-    # and different API keys expose different models (some keys 404 on
-    # gemini-2.5-flash-lite but serve gemini-flash-latest). So the model is
-    # configurable via the GEMINI_MODEL env var — if one model is exhausted or
-    # unavailable on your key, set GEMINI_MODEL to another (e.g. gemini-flash-latest,
-    # gemini-flash-lite-latest, gemini-2.5-flash) and restart; no code change needed.
-    # max_retries lets the client ride out short rate-limit (429) bursts.
-    llm = ChatGoogleGenerativeAI(
-        model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"),
-        google_api_key=api_key,
+    Args:
+        model_name: HuggingFace model to use for answering. Defaults to
+                    HF_MODEL env / the first entry in AVAILABLE_MODELS.
+    """
+    api_key = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+    if not api_key:
+        raise ValueError("HUGGINGFACEHUB_API_TOKEN not set. Check your .env file.")
+
+    model_name = model_name or DEFAULT_MODEL
+
+    # ── 1. LLM — HuggingFace Inference API ────────────────────────────
+    # temperature 0.2 → mostly factual with slight natural variation.
+    # The model is selectable (UI dropdown / HF_MODEL env) from AVAILABLE_MODELS.
+    endpoint = HuggingFaceEndpoint(
+        repo_id=model_name,
+        task="conversational",
+        huggingfacehub_api_token=api_key,
         temperature=0.2,
-        max_retries=3,
+        max_new_tokens=512,
     )
+    llm = ChatHuggingFace(llm=endpoint)
 
     # ── 2. Embedding model ────────────────────────────────────────────
-    # MUST be the same model used during ingestion!
-    # If you ingest with model A but query with model B → wrong vectors → garbage results
-    embeddings = ResilientEmbeddings(
-        model=os.getenv("GEMINI_EMBED_MODEL", "models/gemini-embedding-001"),
-        google_api_key=api_key
-    )
+    # Runs LOCALLY (sentence-transformers) — no API, no rate limits, so uploads
+    # never fail on quota. MUST be the same model used during ingestion.
+    embeddings = get_embeddings()
 
     # ── 3. Vector store ───────────────────────────────────────────────
     # Loads from ./chroma_db (created by ingest.py)
